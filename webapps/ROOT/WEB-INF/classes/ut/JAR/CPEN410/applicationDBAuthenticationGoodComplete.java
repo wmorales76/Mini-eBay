@@ -51,8 +51,6 @@ public class applicationDBAuthenticationGoodComplete{
 		fields ="user.userName, roleuser.roleId, user.Name";
 		hashingVal = hashingSha256(userName + userPass);
 		whereClause="user.userName = roleuser.userName and user.userName='" +userName +"' and hashing='" + hashingVal + "'";
-		
-		
 		System.out.println("listing...");
 		
 		//Return the ResultSet containing all roles assigned to the user
@@ -80,19 +78,18 @@ public class applicationDBAuthenticationGoodComplete{
 		whereClause=" roleuser.roleID=role.roleID and role.roleID=rolewebpage.roleId and menuElement.menuID = webpage.menuID";
 		whereClause+=" and rolewebpage.pageURL=webpage.pageURL";
 		whereClause+=" and userName='"+ userName+"' order by menuElement.title, webpage.pageTitle;";
-		
-		
 		System.out.println("listing...");
 		
 		//Return the ResultSet containing all roles assigned to the user
 		return myDBConn.doSelect(fields, tables, whereClause);
 	}
-	//return the default elements that roleId 3 has access to
+
+	//return the default elements that roleId 1 has access to
 	public ResultSet defaultElements(){
 		String fields, tables, whereClause, orderBy;
 		tables="rolewebpage, menuElement, webpage";
 		fields="rolewebpage.pageURL, menuElement.title, webpage.pageTitle";
-		whereClause="rolewebpage.roleID=3 and rolewebpage.pageURL=webpage.pageURL and menuElement.menuID=webpage.menuID";
+		whereClause="rolewebpage.roleID=1 and rolewebpage.pageURL=webpage.pageURL and menuElement.menuID=webpage.menuID";
 		whereClause+=" order by menuElement.title, webpage.pageTitle;";
 		return myDBConn.doSelect(fields, tables, whereClause);
 	}
@@ -102,12 +99,9 @@ public class applicationDBAuthenticationGoodComplete{
 		String fields, tables, whereClause, orderBy;
 		tables="roleuser, rolewebpage, menuElement, webpage";
 		fields="rolewebpage.pageURL, menuElement.title, webpage.pageTitle";
-		whereClause="roleuser.userName='"+userName+"' and roleuser.roleID=rolewebpage.roleID and rolewebpage.pageURL=webpage.pageURL and menuElement.menuID=webpage.menuID";
-		whereClause+=" order by menuElement.title, webpage.pageTitle;";
+		whereClause="roleuser.userName='"+userName+"' and roleuser.roleID=rolewebpage.roleID and rolewebpage.pageURL=webpage.pageURL and menuElement.menuID=webpage.menuID and menuElement.menuId=1";
 		return myDBConn.doSelect(fields, tables, whereClause);
 	}
-
-
 
 	/*******
 		verifyUser method
@@ -116,8 +110,6 @@ public class applicationDBAuthenticationGoodComplete{
 			@returns:
 				A ResultSet containing the userName and all roles assigned to her.
 	*/
-
-	
 	public ResultSet verifyUser(String userName, String currentPage, String previousPage)
 	{
 		
@@ -131,8 +123,6 @@ public class applicationDBAuthenticationGoodComplete{
 		whereClause=" user.userName = roleuser.userName and user.userName='" +userName +"' and role.roleId=roleuser.roleId and ";
 		whereClause+=" rolewebpage.roleId=role.roleId and rolewebpage.pageURL=webpage.pageURL and webpage.pageURL='" +currentPage+"' and ";
 		whereClause+=" webpageprevious.previousPageURL='"+previousPage+"' and webpageprevious.currentPageURL=webpage.pageURL";
-		
-		
 		System.out.println("listing...");
 		
 		//Return the ResultSet containing all roles assigned to the user
@@ -140,21 +130,49 @@ public class applicationDBAuthenticationGoodComplete{
 		
 		
 	}
+
+	public boolean setRole(String userName, int roleId){
+		boolean res;
+		String table, values;
+		table="roleuser";
+		values="default"+",'"+userName+"', "+roleId+",default";
+		res=myDBConn.doInsert(table, values);
+		System.out.println("Insertion result " + res);
+		return res;
+	}
+	
+	public boolean addDepartment(String deptName) {
+		boolean res;
+		String table, values;
+		table="department";
+		values="default"+","+"'"+deptName+"'";
+		res=myDBConn.doInsert(table, values);
+		System.out.println("Insertion result " + res);
+		return res;
+	}
+
 	//get one specific product 
 	public ResultSet getProduct(int productID) {
-		String fields = "product.ProductId, product.UserName, product.ProductName, product.Description, product.StartingBid, product.DueDate, product.DeptId, department.DeptName";
-		String tables = "product, department";
-		String whereClause = "product.DeptId = department.DeptId and product.ProductId = " + productID;
+		String fields = "product.ProductId, product.UserName, product.ProductName, product.Description, product.StartingBid, product.DueDate, product.DeptName, department.DeptName, image.path";
+		String tables = "product, department, image";
+		String whereClause = "product.DeptName = department.DeptName and product.ProductId = " + productID + " and product.productId = image.productId";
+		return myDBConn.doSelect(fields, tables, whereClause);
+	}
+
+	//get all bids for a specific product
+	public ResultSet gethighestBid(int productID) {
+		String fields = "max(bidValue)";
+		String tables = "bid";
+		String whereClause = "productId = " + productID;
 		return myDBConn.doSelect(fields, tables, whereClause);
 	}
 
 	//retorna todos los productor en el database
-	//SELECT product.UserName, product.ProductName, product.Description, product.StartingBid, product.DueDate, product.DeptId, department.DeptName FROM product, department WHERE product.DeptId = department.DeptId;
-
+	//SELECT product.ProductId, product.UserName, product.ProductName, product.Description, product.StartingBid, product.DueDate, product.DeptId, department.DeptName, image.path FROM product, department, image WHERE product.DeptId = department.DeptId and product.ProductId = image.ProductId;
 	public ResultSet getAllProducts() {
-		String fields = "product.ProductId, product.UserName, product.ProductName, product.Description, product.StartingBid, product.DueDate, product.DeptId, department.DeptName";
-		String tables = "product, department";
-		String whereClause = "product.DeptId = department.DeptId";
+		String fields = "product.ProductId, product.UserName, product.ProductName, product.Description, product.StartingBid, product.DueDate, product.DeptName, department.DeptName, image.path";
+		String tables = "product, department, image";
+		String whereClause = "product.DeptName = department.DeptName and product.ProductId = image.ProductId";
 		return myDBConn.doSelect(fields, tables, whereClause);
 	}
 	//get all departments
@@ -165,17 +183,26 @@ public class applicationDBAuthenticationGoodComplete{
 		return myDBConn.doSelect(fields, tables);
 	}
 
+	//get last insert id
+	public ResultSet getLastProductId() {
+		String fields = "LAST_INSERT_ID()";
+		String tables = "product";
+		String whereClause = ""; // No additional conditions
+		return myDBConn.doSelect(fields, tables);
+	}
+
+	
 	//get all products by department
 	//select productID, productName, Description, startingBid, dueDate from product, department where product.deptId=department.deptId and department.DeptName="Computers";
 	public ResultSet getProductsByDepartment(String department) {
 		String fields = "productID, productName, productDescription, startingBid, dueDate";
 		String tables = "product, department";
-		String whereClause = "product.deptId=department.deptId and department.DeptName="+"'"+department +"'";
+		String whereClause = "product.deptName=department.deptName and department.DeptName="+"'"+department +"'";
 		return myDBConn.doSelect(fields, tables, whereClause);
 	}
+
+
 	//get the image path associated with the product
-
-
 	public boolean addUser(String userName, String completeName, String userPass, String userTelephone)
 	{
 		boolean res;
@@ -190,6 +217,18 @@ public class applicationDBAuthenticationGoodComplete{
 
 
 	// INSERT INTO product VALUES (default, 'userName', 'productName', 'productDescription', startingBid, 'dueDate')
+	public boolean addProduct(String userName, String productName, String productDescription, float startingBid, String dueDate, String deptName){
+		boolean res;
+		String table, values;
+		table="product";
+		values="default"+","+"'"+userName+"', '" +productName+"', '"+ productDescription + "', " + startingBid + ", '" + dueDate + "', '"+deptName+"'";
+		res=myDBConn.doInsert(table, values);
+		System.out.println("Insertion result " + res);
+		return res;
+	}
+	
+
+/*
 	public boolean addProduct(String userName, String productName, String productDescription, String startingBid, String dueDate){
 		boolean res;
 		String table, values;
@@ -199,7 +238,28 @@ public class applicationDBAuthenticationGoodComplete{
 		System.out.println("Insertion result " + res);
 		return res;
 	}
-	
+**/
+
+	public boolean addImage(String imagePath, int productID){
+		boolean res;
+		String table, values;
+		table="image";
+		values="default"+","+"'"+imagePath+"', "+productID;
+		res=myDBConn.doInsert(table, values);
+		System.out.println("Insertion result " + res);
+		return res;
+	}
+
+
+	public boolean addBid(String userName, float bidValue, int productId){
+		boolean res;
+		String table, values;
+		table="bid";
+		values="default"+",'"+userName+"', "+bidValue+", "+productId+", default";
+		res=myDBConn.doInsert(table, values);
+		System.out.println("Insertion result " + res);
+		return res;
+	}
 	
 	/*********
 		hashingSha256 method

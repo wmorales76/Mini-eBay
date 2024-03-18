@@ -29,7 +29,7 @@
 			
 			//Call the listAllDepartment method. This method returns a ResultSet containing all the tuples in the table Department
 			boolean res=appDBAuth.addUser(userName, completeName, userPass, telephone);%>
-		
+
 			
 			
 			<%//Verify if the user has been authenticated
@@ -43,7 +43,8 @@
 					//Update the session variable
 					session.setAttribute("userName", userName);
 				}
-                
+				//give the user the "user" role
+				appDBAuth.setRole(userName, 2);
                 response.sendRedirect("ebayloginHashing.html");
                 %>
                 
