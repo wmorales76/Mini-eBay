@@ -27,7 +27,7 @@
 			System.out.println("Connecting to the database...");
 			System.out.println(appDBAuth.toString()); // Debug print statement
 			System.out.println(appDBManager.toString()); // Debug print statement
-			
+		
 			// Call the listAllDepartment method. This method returns a ResultSet containing all the tuples in the table Department
 			ResultSet res=appDBAuth.verifyUser(userName, currentPage, previousPage);
 			
@@ -35,7 +35,6 @@
 			if (res.next()){
 				// Create the current page attribute
 				session.setAttribute("currentPage", "ebaymanageDepartments.jsp");
-				
 				// Create a session variable
 				if (session.getAttribute("userName")==null ){
 					// Create the session variable
