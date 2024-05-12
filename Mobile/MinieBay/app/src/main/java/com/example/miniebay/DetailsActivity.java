@@ -56,16 +56,11 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.details);
         //Link activity's controls with Java variables
-        TextView result = (TextView)findViewById(R.id.resultView);
         Button btnLogOut = (Button)findViewById(R.id.btnLogOut);
         Button btnSearch = (Button)findViewById(R.id.btnSearch);
         search = (EditText) findViewById(R.id.searchInput);
         //access the local session variables
         prf = getSharedPreferences("user_details",MODE_PRIVATE);
-
-        //Display on the screen
-        result.setText("Hello, "+prf.getString("username",null)+ " \n "+prf.getString("sessionValue",null));
-
 
         // Define the web server's IP address
         hostAddress="192.168.0.215:8080";
