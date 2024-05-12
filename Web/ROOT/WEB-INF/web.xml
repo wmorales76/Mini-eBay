@@ -63,4 +63,21 @@ limitations under the License.
         /getDataBaseJson
       </url-pattern>
     </servlet-mapping>
+
+	    <servlet>
+      <servlet-name>
+        searchServlet
+      </servlet-name>
+      <servlet-class>
+        searchServlet
+      </servlet-class>
+    </servlet>
+    <servlet-mapping>
+      <servlet-name>
+        searchServlet
+      </servlet-name>
+      <url-pattern>
+        /searchServlet
+      </url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -119,7 +119,7 @@ public class applicationDBManager{
 	 * @return A ResultSet containing the products that match the search criteria.
 	 */
 	public ResultSet getSearchProducts(String productTitle, String deptName) {
-		String fields = "product.ProductId, product.UserName, product.ProductName, product.Description, product.StartingBid, product.DueDate, product.DeptName, department.DeptName, image.path";
+		String fields = "product.ProductId, product.UserName, product.ProductName, product.Description, product.StartingBid, product.DueDate, product.DeptName, image.path";
 		String tables = "product, department, image";
 		String whereClause = "product.DeptName = department.DeptName and product.ProductName like '%" + productTitle + "%' and product.ProductId = image.ProductId";
 		if (!deptName.equals("All")) {

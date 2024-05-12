@@ -62,7 +62,7 @@ public class getDataBaseJson extends HttpServlet {
 	   try{
 		    //Create the JSONObject cointaing a JSONArray created using the createJSonArray method
 			//name the JSONObject as "contact"
-			finalOutput.put("departments", createJSonArray());
+			finalOutput.put("products", createJSonArray());
 	   }catch(Exception e)
 	   {
 		   e.printStackTrace();
@@ -96,7 +96,7 @@ public class getDataBaseJson extends HttpServlet {
 				jsonArray.put(i,createJSon(res));
 				i++;
 			}
-			
+		System.out.println(jsonArray.toString());
 		res.close();
 		appDBMg.close();
 		

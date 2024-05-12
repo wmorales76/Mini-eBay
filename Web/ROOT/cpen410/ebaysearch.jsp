@@ -106,14 +106,14 @@
                             <% //print the product title and establish a hyperlink 
                                 //1 productid, 2 username, 3 productname, 4 productdescription, 5 productprice, 6 duedate, 7 deptid
                                 //8 image path name
-                                String imagePath = "/cpen410/imagesjson/"+searchRes.getString(9);
+                                String imagePath = "/cpen410/imagesjson/"+searchRes.getString(8);
                             %> 
                                 <a href="ebayshowProduct.jsp?productId=<%=searchRes.getString(1)%>"><%=searchRes.getString(3)%></a>
                                         </h3>
                                         <img src=<%=imagePath%> alt="product image" width="100" height="100">
                                         <p>Product Price: <%=searchRes.getString(5)%></p>
                                         <p>Due Date: <%=searchRes.getString(6)%></p>
-                                        <p>Department: <%=searchRes.getString(8)%></p>
+                                        <p>Department: <%=searchRes.getString(7)%></p>
                                     </span>
                             <%}
                             %>

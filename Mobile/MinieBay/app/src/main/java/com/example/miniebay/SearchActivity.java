@@ -31,11 +31,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class DetailsActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity {
     SharedPreferences prf;
 
     //This is for debugging
-    private String TAG = DetailsActivity.class.getSimpleName();
+    private String TAG = SearchActivity.class.getSimpleName();
 
     //This is for managing the listview in the activity
     private ListView lv;
@@ -54,12 +54,13 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.details);
+        setContentView(R.layout.search_activity);
         //Link activity's controls with Java variables
         TextView result = (TextView)findViewById(R.id.resultView);
         Button btnLogOut = (Button)findViewById(R.id.btnLogOut);
         Button btnSearch = (Button)findViewById(R.id.btnSearch);
-        search = (EditText) findViewById(R.id.searchInput);
+        search = (EditText)findViewById(R.id.searchInput);
+
         //access the local session variables
         prf = getSharedPreferences("user_details",MODE_PRIVATE);
 
@@ -92,10 +93,10 @@ public class DetailsActivity extends AppCompatActivity {
                 editor.commit();
 
                 // finish the activity as well as all the below Activities in the execution stack.
-                DetailsActivity.this.finishAffinity(); // supported from API 16
+                SearchActivity.this.finishAffinity(); // supported from API 16
 
                 //call the MainActivity for login
-                Intent intent = new Intent(DetailsActivity.this,MainActivity.class);
+                Intent intent = new Intent(SearchActivity.this,SearchActivity.class);
                 startActivity(intent);
             }
         });
@@ -109,10 +110,10 @@ public class DetailsActivity extends AppCompatActivity {
                 editor.putString("search",search.getText().toString());
                 editor.commit();
                 // finish the activity as well as all the below Activities in the execution stack.
-                DetailsActivity.this.finishAffinity();
+                SearchActivity.this.finishAffinity();
 
                 //call the MainActivity for login
-                Intent intent = new Intent(DetailsActivity.this, SearchActivity.class);
+                Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
                 startActivity(intent);
             }
         });
@@ -144,7 +145,7 @@ public class DetailsActivity extends AppCompatActivity {
          */
         protected void onPreExecute() {
             super.onPreExecute();
-            Toast.makeText(DetailsActivity.this, "Items list is downloading", Toast.LENGTH_LONG).show();
+            Toast.makeText(SearchActivity.this, "Items list is downloading", Toast.LENGTH_LONG).show();
         }
 
         /***
@@ -155,13 +156,13 @@ public class DetailsActivity extends AppCompatActivity {
         protected Void doInBackground(Void... arg0) {
             //Create a HttpHandler object
             HttpHandler sh = new HttpHandler();
-
             // Making a request to url and getting response
-            String url = "http://"+hostAddress+"/getDataBaseJson";
+            String url = "http://"+hostAddress+"/searchServlet";
 
-
+            String search = prf.getString("search",null);
+            String deptName = "All";
             // Download data from the web server using JSON;
-            String jsonStr = sh.makeServiceCall(url);
+            String jsonStr = sh.makeSearchServiceCall(url, search, deptName);
 
             // Log download's results
             Log.e(TAG, "Response from url: " + jsonStr);
@@ -173,23 +174,12 @@ public class DetailsActivity extends AppCompatActivity {
                     JSONObject jsonObj = new JSONObject(jsonStr);
 
                     // Getting JSON Array node
-                    JSONArray items = jsonObj.getJSONArray("products");
+                    JSONArray items = jsonObj.getJSONArray("searchItems");
 
                     // looping through All Items
                     for (int i = 0; i < items.length(); i++) {
                         JSONObject c = items.getJSONObject(i);
 
-                        /**
-                         * 			json.put("product_id", res.getString(1));
-                         * 			json.put("sellerUserName", res.getString(2));
-                         * 			json.put("productName", res.getString(3));
-                         * 			json.put("productDescription", res.getString(4));
-                         * 			json.put("startingBid", res.getString(5));
-                         * 			json.put("dueDate", res.getString(6));
-                         * 			json.put("deptName", res.getString(7));
-                         * 			json.put("imagePath", res.getString(8));
-                         *
-                         * */
                         String product_id = c.getString("product_id");
                         String sellerUserName = c.getString("sellerUserName");
                         String productName = c.getString("productName");
