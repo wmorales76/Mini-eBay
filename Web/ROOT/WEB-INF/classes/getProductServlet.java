@@ -14,7 +14,7 @@ import java.sql.*;
  */
 
 // Extend HttpServlet class
-public class searchServlet extends HttpServlet {
+public class getProductServlet extends HttpServlet {
 
 
     // Servlet initialization
@@ -35,13 +35,13 @@ public class searchServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String search = request.getParameter("search");
-        if(search == null) search = "";
-        String deptName = request.getParameter("deptName");
-        if(deptName == null) deptName = "All";
-        System.out.println("Search: " + search + " DeptName: " + deptName);
+        String ProductID = request.getParameter("ProductID");
+        if(ProductID == null) ProductID = "";
+        System.out.println("ProductID: " + ProductID);
+
+
         // Create an JSONObject containing a JSONArray
-        JSONObject jsonResult = createFinalJSON(search, deptName);
+        JSONObject jsonResult = createFinalJSON(ProductID);
         // Actual logic goes here.
         PrintWriter out = response.getWriter();
 
@@ -59,14 +59,14 @@ public class searchServlet extends HttpServlet {
     /**
      * Create a JSONObject containg a JSONArray
      **/
-    public JSONObject createFinalJSON(String search, String deptName) {
+    public JSONObject createFinalJSON(String ProductID) {
         // Create the JSONObject
         JSONObject finalOutput = new JSONObject();
         try {
             // Create the JSONObject cointaing a JSONArray created using the createJSonArray
             // method
             // name the JSONObject as "contact"
-            finalOutput.put("searchItems", createJSonArray(search, deptName));
+            finalOutput.put("productDetails", createJSonArray(ProductID));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -81,7 +81,7 @@ public class searchServlet extends HttpServlet {
      * @param count: number of elements in the array
      */
 
-    public JSONArray createJSonArray(String search, String deptName) {
+    public JSONArray createJSonArray(String ProductID) {
 
         // Create the JSONArray
         JSONArray jsonArray = new JSONArray();
@@ -92,8 +92,8 @@ public class searchServlet extends HttpServlet {
 
         try {
             // query the database
-            ResultSet res = appDBMg.getSearchProducts(search, deptName);
-            System.out.println("Sending all products...");
+            ResultSet res = appDBMg.getProduct(Integer.parseInt(ProductID));
+            System.out.println("Sending the product information...");
 
             while (res.next()) {
                 jsonArray.put(i, createJSon(res));

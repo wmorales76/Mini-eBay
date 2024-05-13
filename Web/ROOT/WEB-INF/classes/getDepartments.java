@@ -13,7 +13,7 @@ import java.sql.*;
 
 
 // Extend HttpServlet class
-public class getDataBaseJson extends HttpServlet {
+public class getDepartments extends HttpServlet {
    
    //Servlet initialization
    public void init() throws ServletException {
@@ -59,7 +59,7 @@ public class getDataBaseJson extends HttpServlet {
 	   try{
 		    //Create the JSONObject cointaing a JSONArray created using the createJSonArray method
 			//name the JSONObject as "contact"
-			finalOutput.put("products", createJSonArray());
+			finalOutput.put("departments", createJSonArray());
 	   }catch(Exception e)
 	   {
 		   e.printStackTrace();
@@ -86,8 +86,8 @@ public class getDataBaseJson extends HttpServlet {
 		int i=0;
 		try{
 			//query the database
-		   ResultSet res= appDBMg.getAllProducts();
-			System.out.println("Sending all products...");
+		   ResultSet res= appDBMg.getAllDepartments();
+			System.out.println("Sending all departments...");
 			while (res.next()){				//Add the new JSONObject to the JSONArray in location i
 				
 				jsonArray.put(i,createJSon(res));
@@ -117,15 +117,8 @@ public class getDataBaseJson extends HttpServlet {
 	   //Create the JSONObject
 	   JSONObject json = new JSONObject();
 	   try{
-			//Add the appropriate data to the object
-			json.put("product_id", res.getString(1));
-			json.put("sellerUserName", res.getString(2));
-			json.put("productName", res.getString(3));
-			json.put("productDescription", res.getString(4));
-			json.put("startingBid", res.getString(5));
-			json.put("dueDate", res.getString(6));
-			json.put("deptName", res.getString(7));
-			json.put("imagePath", res.getString(8));
+           //Add the data to the JSONObject
+           json.put("deptName", res.getString(1));
 	
 			
 	} catch(Exception e)

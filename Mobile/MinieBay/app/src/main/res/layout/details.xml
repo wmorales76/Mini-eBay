@@ -14,33 +14,32 @@
     <EditText
         android:id="@+id/searchInput"
         android:layout_width="wrap_content"
-        android:layout_height="62dp"
-        android:layout_below="@id/resultView"
+        android:layout_height="49dp"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="1dp"
+        android:layout_marginStart="3dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="1dp"
+        android:layout_marginEnd="5dp"
         android:layout_toStartOf="@id/btnLogOut"
-        android:hint="Enter search query" />
+        android:background="@drawable/spinner_border"
+        android:hint="  Enter search query" />
 
-    <AutoCompleteTextView
-        android:id="@+id/searchDeptInput"
-        android:layout_width="wrap_content"
-        android:layout_height="65dp"
-        android:layout_below="@id/searchInput"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="-5dp"
-        android:layout_marginEnd="2dp"
-        android:layout_toStartOf="@id/btnLogOut"
-        android:hint="Enter Department Name" />
+    <Spinner
+        android:id="@+id/deptList"
+        android:layout_width="306dp"
+        android:layout_height="52dp"
+        android:layout_above="@+id/itemList"
+        android:layout_below="@+id/searchInput"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginBottom="24dp"
+        android:layout_toStartOf="@+id/btnSearch"
+        android:background="@drawable/spinner_border" />
 
     <Button
         android:id="@+id/btnSearch"
         android:layout_width="wrap_content"
         android:layout_height="80dp"
         android:layout_below="@+id/btnLogOut"
-        android:layout_alignBottom="@+id/searchDeptInput"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="-4dp"
         android:layout_marginEnd="1dp"
@@ -49,10 +48,12 @@
 
     <ListView
         android:id="@+id/itemList"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/searchDeptInput"
+        android:layout_below="@+id/btnSearch"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="11dp" />>
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="7dp" />
+
 
 </RelativeLayout>

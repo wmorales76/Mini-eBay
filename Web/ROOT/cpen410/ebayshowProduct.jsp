@@ -97,7 +97,7 @@
                             <h3>Product Name:
 <% 
                                 //print the product title and establish a hyperlink 
-                                String imagePath = "/cpen410/imagesjson/" + productres.getString(9);
+                                String imagePath = "/cpen410/imagesjson/" + productres.getString(8);
 %> 
                             <a><%= productres.getString(3) %></a>
                             </h3>
@@ -117,7 +117,7 @@
                                 }
 %>
                             <p>Due Date: <%= productres.getString(6) %></p>
-                            <p>Department: <%= productres.getString(8) %></p>
+                            <p>Department: <%= productres.getString(7) %></p>
                         </div>
 <%
                     }

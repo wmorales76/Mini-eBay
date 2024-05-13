@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,17 +35,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class SearchActivity extends AppCompatActivity {
+public class ProductActivity extends AppCompatActivity {
     SharedPreferences prf;
 
     //This is for debugging
-    private String TAG = SearchActivity.class.getSimpleName();
+    private String TAG = ProductActivity.class.getSimpleName();
 
     //This is for managing the listview in the activity
     private ListView lv;
 
     private EditText search;
+
+    //autocomplete textview
     private Spinner deptList;
+
     //Web server's IP address
     private String hostAddress;
 
@@ -57,16 +61,16 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.search_activity);
+        setContentView(R.layout.details);
         //Link activity's controls with Java variables
         Button btnLogOut = (Button)findViewById(R.id.btnLogOut);
         Button btnSearch = (Button)findViewById(R.id.btnSearch);
-        search = (EditText)findViewById(R.id.searchInput);
+        search = (EditText) findViewById(R.id.searchInput);
         deptList = (Spinner) findViewById(R.id.deptList);
+
+
         //access the local session variables
         prf = getSharedPreferences("user_details",MODE_PRIVATE);
-
-        //Display on the screen
 
         // Define the web server's IP address
         hostAddress="192.168.0.215:8080";
@@ -83,7 +87,6 @@ public class SearchActivity extends AppCompatActivity {
         // Create and start the thread
         new GetItems(this).execute();
         new GetDepartments(this).execute();
-
         btnLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,10 +97,10 @@ public class SearchActivity extends AppCompatActivity {
                 editor.commit();
 
                 // finish the activity as well as all the below Activities in the execution stack.
-                SearchActivity.this.finishAffinity(); // supported from API 16
+                ProductActivity.this.finishAffinity(); // supported from API 16
 
                 //call the MainActivity for login
-                Intent intent = new Intent(SearchActivity.this,SearchActivity.class);
+                Intent intent = new Intent(ProductActivity.this,MainActivity.class);
                 startActivity(intent);
             }
         });
@@ -112,10 +115,10 @@ public class SearchActivity extends AppCompatActivity {
                 editor.putString("dept",deptList.getSelectedItem().toString());
                 editor.commit();
                 // finish the activity as well as all the below Activities in the execution stack.
-                SearchActivity.this.finishAffinity();
+                ProductActivity.this.finishAffinity();
 
                 //call the MainActivity for login
-                Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
+                Intent intent = new Intent(ProductActivity.this, SearchActivity.class);
                 startActivity(intent);
             }
         });
@@ -147,7 +150,7 @@ public class SearchActivity extends AppCompatActivity {
          */
         protected void onPreExecute() {
             super.onPreExecute();
-            Toast.makeText(SearchActivity.this, "Items list is downloading", Toast.LENGTH_LONG).show();
+            Toast.makeText(ProductActivity.this, "Items list is downloading", Toast.LENGTH_LONG).show();
         }
 
         /***
@@ -158,16 +161,14 @@ public class SearchActivity extends AppCompatActivity {
         protected Void doInBackground(Void... arg0) {
             //Create a HttpHandler object
             HttpHandler sh = new HttpHandler();
+
             // Making a request to url and getting response
-            String url = "http://"+hostAddress+"/searchServlet";
+            String url = "http://"+hostAddress+"/getProductServlet";
 
-            String search = prf.getString("search",null);
-            String deptName = prf.getString("dept",null);
-
-            Log.e(TAG, "Search: " + search);
-            Log.e(TAG, "Dept: " + deptName);
+            String ProductID = prf.getString("productID",null);
+            Log.e(TAG, "ProductID: " + ProductID);
             // Download data from the web server using JSON;
-            String jsonStr = sh.makeSearchServiceCall(url, search, deptName);
+            String jsonStr = sh.makeProductServiceCall(url, ProductID);
 
             // Log download's results
             Log.e(TAG, "Response from url: " + jsonStr);
@@ -179,7 +180,7 @@ public class SearchActivity extends AppCompatActivity {
                     JSONObject jsonObj = new JSONObject(jsonStr);
 
                     // Getting JSON Array node
-                    JSONArray items = jsonObj.getJSONArray("searchItems");
+                    JSONArray items = jsonObj.getJSONArray("productDetails");
 
                     // looping through All Items
                     for (int i = 0; i < items.length(); i++) {
@@ -262,6 +263,7 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
+
     private class GetDepartments extends AsyncTask<Void, Void, List<String>> {
 
         // Context: every transaction in a Android application must be attached to a context
@@ -283,7 +285,7 @@ public class SearchActivity extends AppCompatActivity {
          */
         protected void onPreExecute() {
             super.onPreExecute();
-            Toast.makeText(SearchActivity.this, "Retrieving department list", Toast.LENGTH_LONG).show();
+            Toast.makeText(ProductActivity.this, "Retrieving department list", Toast.LENGTH_LONG).show();
         }
 
         /***
@@ -396,7 +398,6 @@ public class SearchActivity extends AppCompatActivity {
             }
         }
     }
-
     /**
      * This class defines a ArrayAdapter for the ListView manipulation
      */
@@ -454,6 +455,10 @@ public class SearchActivity extends AppCompatActivity {
                             "You selected " + itemUserList.get(position).productName,
                             Toast.LENGTH_LONG).show();
                     // Additional actions can be added here
+                    prf.edit().putString("productID", itemUserList.get(position).productID).apply();
+                    Intent intent = new Intent(ProductActivity.this, ProductActivity.class);
+                    startActivity(intent);
+
                 }
             });
             return convertView;

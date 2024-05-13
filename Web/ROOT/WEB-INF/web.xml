@@ -28,9 +28,7 @@ limitations under the License.
 			30
 		</session-timeout>
 	</session-config>
-	
-  
-  <servlet>
+	<servlet>
 		<servlet-name>
 			sessionServlet
 		</servlet-name>
@@ -46,38 +44,68 @@ limitations under the License.
 			/sessionServlet
 		</url-pattern>
 	</servlet-mapping>
-
-    <servlet>
-      <servlet-name>
-        getDataBaseJson
-      </servlet-name>
-      <servlet-class>
-        getDataBaseJson
-      </servlet-class>
-    </servlet>
-    <servlet-mapping>
-      <servlet-name>
-        getDataBaseJson
-      </servlet-name>
-      <url-pattern>
-        /getDataBaseJson
-      </url-pattern>
-    </servlet-mapping>
-
-	    <servlet>
-      <servlet-name>
-        searchServlet
-      </servlet-name>
-      <servlet-class>
-        searchServlet
-      </servlet-class>
-    </servlet>
-    <servlet-mapping>
-      <servlet-name>
-        searchServlet
-      </servlet-name>
-      <url-pattern>
-        /searchServlet
-      </url-pattern>
-    </servlet-mapping>
+	<servlet>
+		<servlet-name>
+			getDataBaseJson
+		</servlet-name>
+		<servlet-class>
+			getDataBaseJson
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>
+			getDataBaseJson
+		</servlet-name>
+		<url-pattern>
+			/getDataBaseJson
+		</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>
+			searchServlet
+		</servlet-name>
+		<servlet-class>
+			searchServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>
+			searchServlet
+		</servlet-name>
+		<url-pattern>
+			/searchServlet
+		</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>
+			getDepartments
+		</servlet-name>
+		<servlet-class>
+			getDepartments
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>
+			getDepartments
+		</servlet-name>
+		<url-pattern>
+			/getDepartments
+		</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>
+			getProductServlet
+		</servlet-name>
+		<servlet-class>
+			getProductServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>
+			getProductServlet
+		</servlet-name>
+		<url-pattern>
+			/getProductServlet
+		</url-pattern>
+	</servlet-mapping>
 </web-app>

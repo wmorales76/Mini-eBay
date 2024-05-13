@@ -88,7 +88,7 @@ public class applicationDBManager{
 	public ResultSet getProduct(int productID) {
 		String fields = "product.ProductId, product.UserName, product.ProductName, " +
 				"product.Description, product.StartingBid, product.DueDate, " +
-				"product.DeptName, department.DeptName, image.path";
+				"product.DeptName, image.path";
 		String tables = "product, department, image";
 		String whereClause = "product.DeptName = department.DeptName " +
 				"and product.ProductId = " + productID + " " +
