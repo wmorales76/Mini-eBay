@@ -454,6 +454,10 @@ public class SearchActivity extends AppCompatActivity {
                             "You selected " + itemUserList.get(position).productName,
                             Toast.LENGTH_LONG).show();
                     // Additional actions can be added here
+                    prf.edit().putString("productID", itemUserList.get(position).productID).apply();
+                    Intent intent = new Intent(SearchActivity.this, ProductActivity.class);
+                    startActivity(intent);
+
                 }
             });
             return convertView;

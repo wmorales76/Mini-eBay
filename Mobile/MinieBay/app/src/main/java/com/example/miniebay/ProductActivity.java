@@ -51,7 +51,12 @@ public class ProductActivity extends AppCompatActivity {
 
     //Web server's IP address
     private String hostAddress;
-
+    private ImageView productImageView;
+    private TextView productNameTextView;
+    private TextView productDescriptionTextView;
+    private TextView startingBidTextView;
+    private TextView dueDateTextView;
+    private TextView departmentTextView;
     //Users adapter
     private UsersAdapter adapter;
 
@@ -61,14 +66,19 @@ public class ProductActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.details);
+        setContentView(R.layout.product_activity);
         //Link activity's controls with Java variables
         Button btnLogOut = (Button)findViewById(R.id.btnLogOut);
         Button btnSearch = (Button)findViewById(R.id.btnSearch);
         search = (EditText) findViewById(R.id.searchInput);
         deptList = (Spinner) findViewById(R.id.deptList);
 
-
+        productImageView = findViewById(R.id.productImageView);
+        productNameTextView = findViewById(R.id.productNameTextView);
+        productDescriptionTextView = findViewById(R.id.productDescriptionTextView);
+        startingBidTextView = findViewById(R.id.startingBidTextView);
+        dueDateTextView = findViewById(R.id.dueDateTextView);
+        departmentTextView = findViewById(R.id.departmentTextView);
         //access the local session variables
         prf = getSharedPreferences("user_details",MODE_PRIVATE);
 
@@ -81,8 +91,6 @@ public class ProductActivity extends AppCompatActivity {
         // Defines the adapter: Receives the context (Current activity) and the Arraylist
         adapter = new UsersAdapter(this, itemUserList);
 
-        // Create a accessor to the ListView in the activity
-        lv = (ListView) findViewById(R.id.itemList);
 
         // Create and start the thread
         new GetItems(this).execute();
@@ -127,7 +135,7 @@ public class ProductActivity extends AppCompatActivity {
     /***
      *  This class is a thread for receiving and process data from the Web server
      */
-    private class GetItems extends AsyncTask<Void, Void, Void> {
+    private class GetItems extends AsyncTask<Void, Void, userItem> {
 
         // Context: every transaction in a Android application must be attached to a context
         private Activity activity;
@@ -158,7 +166,7 @@ public class ProductActivity extends AppCompatActivity {
          * @param arg0
          * @return
          */
-        protected Void doInBackground(Void... arg0) {
+        protected userItem doInBackground(Void... arg0) {
             //Create a HttpHandler object
             HttpHandler sh = new HttpHandler();
 
@@ -202,10 +210,7 @@ public class ProductActivity extends AppCompatActivity {
                         //Download the actual image using the imageURL
                         Drawable actualImage= LoadImageFromWebOperations(imageURL);
 
-                        // Create an userItem object and add it to the items' list
-                        //itemUserList.add(new userItem(department, building, actualImage));
-                        itemUserList.add(new userItem(product_id,sellerUserName,productName,productDescription,startingBid,dueDate,department,actualImage));
-                    }
+                        return new userItem(product_id, sellerUserName, productName, productDescription, startingBid, dueDate, department, actualImage);}
                 } //Log any problem with received data
                 catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
@@ -236,11 +241,19 @@ public class ProductActivity extends AppCompatActivity {
          *  This method runs after thread completion
          *  Set up the List view using the ArrayAdapter
          *
-         * @param result
+         * @param item
          */
-        protected void onPostExecute (Void result){
-            super.onPostExecute(result);
-            lv.setAdapter(adapter);
+        protected void onPostExecute(userItem item) {
+            super.onPostExecute(item);
+
+            if (item != null) {
+                productNameTextView.setText(item.getProductName());
+                productDescriptionTextView.setText(item.getProductDescription());
+                startingBidTextView.setText("Starting Bid: $" + item.getStartingBid());
+                dueDateTextView.setText("Due Date: " + item.getDueDate());
+                departmentTextView.setText("Department: " + item.getDeptName());
+                productImageView.setImageDrawable(item.getImagePath());
+            }
         }
 
         /***
@@ -490,6 +503,40 @@ public class ProductActivity extends AppCompatActivity {
             this.department = department;
             this.image = image;
         }
+
+        public String getProductID() {
+            return productID;
+        }
+
+        public String getSellerUserName() {
+            return sellerUserName;
+        }
+
+        public String getProductName() {
+            return productName;
+        }
+
+        public String getProductDescription() {
+            return productDescription;
+        }
+
+        public String getStartingBid() {
+            return startingBid;
+        }
+
+        public String getDueDate() {
+            return dueDate;
+        }
+
+        public String getDeptName() {
+            return department;
+        }
+
+        public Drawable getImagePath() {
+            return image;
+        }
+
+
     }
 
 }
