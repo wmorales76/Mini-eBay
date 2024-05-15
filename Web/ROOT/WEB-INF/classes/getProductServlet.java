@@ -16,7 +16,6 @@ import java.sql.*;
 // Extend HttpServlet class
 public class getProductServlet extends HttpServlet {
 
-
     // Servlet initialization
     public void init() throws ServletException {
         // Do required initialization
@@ -36,9 +35,9 @@ public class getProductServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String ProductID = request.getParameter("ProductID");
-        if(ProductID == null) ProductID = "";
+        if (ProductID == null)
+            ProductID = "";
         System.out.println("ProductID: " + ProductID);
-
 
         // Create an JSONObject containing a JSONArray
         JSONObject jsonResult = createFinalJSON(ProductID);
@@ -124,6 +123,19 @@ public class getProductServlet extends HttpServlet {
      * 
      */
     public JSONObject createJSon(ResultSet res) {
+
+        applicationDBManager appDBMg = new applicationDBManager();
+		Double maxBid = 0.0;
+		try {
+			ResultSet res2 = appDBMg.getMaxBid(Integer.parseInt(res.getString(1)));
+			if (res2.next()) {
+				maxBid = res2.getDouble(1);
+			}
+			res2.close();
+			appDBMg.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
         // Create the JSONObject
         JSONObject json = new JSONObject();
         try {
@@ -132,7 +144,11 @@ public class getProductServlet extends HttpServlet {
             json.put("sellerUserName", res.getString(2));
             json.put("productName", res.getString(3));
             json.put("productDescription", res.getString(4));
-            json.put("startingBid", res.getString(5));
+            if(maxBid == 0.0 || maxBid == null){
+                json.put("startingBid", res.getString(5));
+            }else{
+                json.put("startingBid", maxBid);
+            }
             json.put("dueDate", res.getString(6));
             json.put("deptName", res.getString(7));
             json.put("imagePath", res.getString(8));

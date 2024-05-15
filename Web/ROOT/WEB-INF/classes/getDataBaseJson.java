@@ -70,11 +70,12 @@ public class getDataBaseJson extends HttpServlet {
 	   }
    }
    
-   /**
-	Create a JSONArray
-	@param count: number of elements in the array
-   */
    
+/**
+ * Creates a JSONArray containing the data retrieved from the database.
+ * 
+ * @return The JSONArray containing the data from the database.
+ */
    public JSONArray createJSonArray()
    {
 	   
@@ -116,13 +117,29 @@ public class getDataBaseJson extends HttpServlet {
    {
 	   //Create the JSONObject
 	   JSONObject json = new JSONObject();
+	   applicationDBManager appDBMg = new applicationDBManager();
+		Double maxBid = 0.0;
+		try {
+			ResultSet res2 = appDBMg.getMaxBid(Integer.parseInt(res.getString(1)));
+			if (res2.next()) {
+				maxBid = res2.getDouble(1);
+			}
+			res2.close();
+			appDBMg.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	   try{
 			//Add the appropriate data to the object
 			json.put("product_id", res.getString(1));
 			json.put("sellerUserName", res.getString(2));
 			json.put("productName", res.getString(3));
 			json.put("productDescription", res.getString(4));
-			json.put("startingBid", res.getString(5));
+            if(maxBid == 0.0 || maxBid == null){
+                json.put("startingBid", res.getString(5));
+            }else{
+                json.put("startingBid", maxBid);
+            }
 			json.put("dueDate", res.getString(6));
 			json.put("deptName", res.getString(7));
 			json.put("imagePath", res.getString(8));

@@ -249,7 +249,7 @@ public class ProductActivity extends AppCompatActivity {
             if (item != null) {
                 productNameTextView.setText(item.getProductName());
                 productDescriptionTextView.setText(item.getProductDescription());
-                startingBidTextView.setText("Starting Bid: $" + item.getStartingBid());
+                startingBidTextView.setText("Price: $" + item.getStartingBid());
                 dueDateTextView.setText("Due Date: " + item.getDueDate());
                 departmentTextView.setText("Department: " + item.getDeptName());
                 productImageView.setImageDrawable(item.getImagePath());
@@ -277,6 +277,10 @@ public class ProductActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * This class represents an AsyncTask that retrieves a list of departments from a web server.
+     * It runs in the background and updates the UI with the retrieved data.
+     */
     private class GetDepartments extends AsyncTask<Void, Void, List<String>> {
 
         // Context: every transaction in a Android application must be attached to a context

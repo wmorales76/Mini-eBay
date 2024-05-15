@@ -112,7 +112,6 @@ public class SearchActivity extends AppCompatActivity {
                 editor.putString("dept",deptList.getSelectedItem().toString());
                 editor.commit();
                 // finish the activity as well as all the below Activities in the execution stack.
-                SearchActivity.this.finishAffinity();
 
                 //call the MainActivity for login
                 Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
@@ -435,11 +434,13 @@ public class SearchActivity extends AppCompatActivity {
             TextView dueDate = (TextView) convertView.findViewById(R.id.dueDate);
             TextView department = (TextView) convertView.findViewById(R.id.department);
             ImageView productImage = (ImageView) convertView.findViewById(R.id.imageView);
+            TextView price = (TextView) convertView.findViewById(R.id.price);
 
             // Populate the data into the template view using the data object
             productName.setText(user.productName);
             dueDate.setText("Due Date: " + user.dueDate);
             department.setText("Dept: " + user.department);
+            price.setText("Price: " + user.startingBid);
             productImage.setImageDrawable(user.image);
 
             // Return the completed view to render on screen
@@ -489,6 +490,40 @@ public class SearchActivity extends AppCompatActivity {
             this.department = department;
             this.image = image;
         }
+
+        public String getProductID() {
+            return productID;
+        }
+
+        public String getSellerUserName() {
+            return sellerUserName;
+        }
+
+        public String getProductName() {
+            return productName;
+        }
+
+        public String getProductDescription() {
+            return productDescription;
+        }
+
+        public String getStartingBid() {
+            return startingBid;
+        }
+
+        public String getDueDate() {
+            return dueDate;
+        }
+
+        public String getDeptName() {
+            return department;
+        }
+
+        public Drawable getImagePath() {
+            return image;
+        }
+
+
     }
 
 }

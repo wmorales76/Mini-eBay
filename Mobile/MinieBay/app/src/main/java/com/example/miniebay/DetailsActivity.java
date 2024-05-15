@@ -115,7 +115,6 @@ public class DetailsActivity extends AppCompatActivity {
                 editor.putString("dept",deptList.getSelectedItem().toString());
                 editor.commit();
                 // finish the activity as well as all the below Activities in the execution stack.
-                DetailsActivity.this.finishAffinity();
 
                 //call the MainActivity for login
                 Intent intent = new Intent(DetailsActivity.this, SearchActivity.class);
@@ -184,18 +183,7 @@ public class DetailsActivity extends AppCompatActivity {
                     // looping through All Items
                     for (int i = 0; i < items.length(); i++) {
                         JSONObject c = items.getJSONObject(i);
-
-                        /**
-                         * 			json.put("product_id", res.getString(1));
-                         * 			json.put("sellerUserName", res.getString(2));
-                         * 			json.put("productName", res.getString(3));
-                         * 			json.put("productDescription", res.getString(4));
-                         * 			json.put("startingBid", res.getString(5));
-                         * 			json.put("dueDate", res.getString(6));
-                         * 			json.put("deptName", res.getString(7));
-                         * 			json.put("imagePath", res.getString(8));
-                         *
-                         * */
+                        // Get the item name and add it to the array
                         String product_id = c.getString("product_id");
                         String sellerUserName = c.getString("sellerUserName");
                         String productName = c.getString("productName");
@@ -274,6 +262,11 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * This class represents an AsyncTask that retrieves a list of departments from a web server.
+     * It extends the AsyncTask class and is used to perform network operations in the background.
+     * The retrieved department list is then used to populate a spinner in the UI.
+     */
     private class GetDepartments extends AsyncTask<Void, Void, List<String>> {
 
         // Context: every transaction in a Android application must be attached to a context
@@ -446,11 +439,13 @@ public class DetailsActivity extends AppCompatActivity {
             TextView dueDate = (TextView) convertView.findViewById(R.id.dueDate);
             TextView department = (TextView) convertView.findViewById(R.id.department);
             ImageView productImage = (ImageView) convertView.findViewById(R.id.imageView);
+            TextView price = (TextView) convertView.findViewById(R.id.price);
 
             // Populate the data into the template view using the data object
             productName.setText(user.productName);
             dueDate.setText("Due Date: " + user.dueDate);
             department.setText("Dept: " + user.department);
+            price.setText("Price: " + user.startingBid);
             productImage.setImageDrawable(user.image);
 
             // Return the completed view to render on screen
@@ -500,6 +495,40 @@ public class DetailsActivity extends AppCompatActivity {
             this.department = department;
             this.image = image;
         }
+
+        public String getProductID() {
+            return productID;
+        }
+
+        public String getSellerUserName() {
+            return sellerUserName;
+        }
+
+        public String getProductName() {
+            return productName;
+        }
+
+        public String getProductDescription() {
+            return productDescription;
+        }
+
+        public String getStartingBid() {
+            return startingBid;
+        }
+
+        public String getDueDate() {
+            return dueDate;
+        }
+
+        public String getDeptName() {
+            return department;
+        }
+
+        public Drawable getImagePath() {
+            return image;
+        }
+
+
     }
 
 }
